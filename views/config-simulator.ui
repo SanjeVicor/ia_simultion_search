@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1056</width>
+    <height>553</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="contentVLayout"/>
+    </item>
+    <item row="1" column="1">
+     <layout class="QGridLayout" name="mapGrd">
+      <property name="spacing">
+       <number>1</number>
+      </property>
+     </layout>
+    </item>
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="XGrd"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="go_back">
+      <property name="maximumSize">
+       <size>
+        <width>74</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(52, 101, 164);</string>
+      </property>
+      <property name="text">
+       <string>ir atras</string>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>go-back.png</normaloff>go-back.png</iconset>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
