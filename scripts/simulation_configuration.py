@@ -11,23 +11,24 @@ from models.character import Character
 from models.goal import Goal
 
 class SimulationConfiguration(QMainWindow, Ui_MainWindow):
-    def __init__(self,Map):
+    def __init__(self,character):
         super(SimulationConfiguration, self).__init__()
         self.setupUi(self)
-
-        self.Map = Map
-        self.graph = Map.get_graph()
+        
+        self.character = character
+        self.Map = self.character.get_map()
+        self.graph = self.Map.get_graph()
 
         self.load_coords()
         self.load_map()
 
         #idx = (len(self.graph[0]) * len(self.graph)) + len(self.graph)
         idx = self.mapGrd.count()
-        self.character = Character(idx)
+        self.character.set_label_idx(idx)
 
         idx = self.mapGrd.count() + 1 
         self.goal = Goal(lbl_idx=idx)
-
+         
         self.load_character_lbl()
         self.load_character_errors()
         self.load_character_textline()
@@ -140,12 +141,17 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
 #----------
 
     def valid_coord(self,coords):
-        coord_reg_ex = r"(\s*[1-9][0-9]*\s*\x2c\s*[a-zA-Z]*\s*)"
+        coord_reg_ex = r"(\s*[1-9][0-9]*\s*\x2c\s*[a-zA-Z]+\s*)"
         if re.fullmatch(coord_reg_ex,coords):
             coords = coords.replace(" ","")
             coords = coords.replace('\n',"")
             coords = coords.replace('\r',"") 
             coords = coords.split(',')
+            print("COORDENADAS " , coords)
+            print("COORDENADAS " , coords[0])
+            print("COORDENADAS " , coords[1])
+            print("COORDENADAS " , coords[1].upper())
+            print("COORDENADAS " , ord(coords[1].upper()))
             print(coords[1].upper())
             coords[1] = ord(coords[1].upper()) - 64
             coords[0] = int(coords[0]) - 1
@@ -154,9 +160,13 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         return False, None
 
     def valid_ranges(self,row,column):
+        print(row)
+        print(column)
+        print(len(self.graph))
+        print(len(self.graph[0]))
         if row < 0 or column < 0:
             return False
-        if row <= len(self.graph[0]) and column <= len(self.graph):
+        if row <= len(self.graph) and column <= len(self.graph[0]):
             return True
         return False
 
@@ -202,11 +212,14 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         ok, coords = self.valid_coord(coords)
         if ok:
             self.error_goal_exist_coord_lbl.setVisible(False)
-            
-            if self.mapGrd.itemAt(self.goal.get_label_idx()) != None:
-                self.delete_position_goal()
+            self.error_goal_invalid_coord_lbl.setVisible(False)
+            if self.Map.get_cost_coord(coords[0], coords[1]-1) != None:
+                if self.mapGrd.itemAt(self.goal.get_label_idx()) != None:
+                    self.delete_position_goal()
+                self.load_goal(coords[0], coords[1])
+            else:
+                self.error_goal_invalid_coord_lbl.setVisible(True)
 
-            self.load_goal(coords[0], coords[1])
         else:
             self.error_goal_exist_coord_lbl.setVisible(True)
 
@@ -259,13 +272,18 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
     def character_changed_textLine(self):
         coords = self.characterTxt.text() 
         ok, coords = self.valid_coord(coords)
+        print("OK  ", ok)
         if ok:
             self.error_exist_coord_lbl.setVisible(False)
-            
-            if self.mapGrd.itemAt(self.character.get_label_idx()) != None:
-                self.delete_position_character()
+            self.error_invalid_coord_lbl.setVisible(False)
+            print(coords)
 
-            self.load_character(coords[0], coords[1])
+            if self.Map.get_cost_coord(coords[0], coords[1]-1) != None:
+                if self.mapGrd.itemAt(self.character.get_label_idx()) != None:
+                    self.delete_position_character()
+                self.load_character(coords[0], coords[1])
+            else:
+                self.error_invalid_coord_lbl.setVisible(True)
         else:
             self.error_exist_coord_lbl.setVisible(True)
 

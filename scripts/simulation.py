@@ -9,6 +9,8 @@ from models.map import Map
 from models.character import Character
 from models.goal import Goal
 
+from models.inital import Initial_point
+
 class SimulationWindow(QMainWindow,Ui_MainWindow):
     def __init__(self, Map, character, goal): 
         super(SimulationWindow, self).__init__()
@@ -24,6 +26,13 @@ class SimulationWindow(QMainWindow,Ui_MainWindow):
         t_r, t_c = self.goal.get_last_position()
         self.target = [t_r,t_c]
 
+        x,y = self.character.get_last_position()
+
+        idx = self.mapGrd.count()
+        self.initial = Initial_point(idx)
+        self.initial.set_last_position(x,y)
+        self.load_initial()
+
         idx = self.mapGrd.count()
         self.goal.set_label_idx(idx)
         self.load_goal()
@@ -32,10 +41,20 @@ class SimulationWindow(QMainWindow,Ui_MainWindow):
         idx = self.mapGrd.count()
         self.character.set_label_idx(idx)
 
-        x,y = self.character.get_last_position()
+        
         self.load_character(x,y)
         self.assign_widgets()
+
+        self.done = False
+        row,column = self.character.get_last_position()
+        self.is_done(row,column)
         self.show()
+
+    def load_initial(self):
+        x,y = self.initial.get_last_position()
+        old_lbl = self.mapGrd.itemAtPosition(x,y)
+        old_lbl = old_lbl.widget()
+        self.mapGrd.addWidget(self.initial.create_lbl(),x,y)
 
     def assign_widgets(self):
         pass
@@ -82,7 +101,8 @@ class SimulationWindow(QMainWindow,Ui_MainWindow):
 
     def update_cost_lbl(self,x,y):
         self.total_cost += self.Map.get_weight(x,y)
-        data = f"Costo Total : {self.total_cost}"
+        #text = f"{self.total_cost:.2f}"
+        data = f"Costo Total : {self.total_cost:.2f}"
         self.rewardLbl.setText(data)
 
     def delete_position_character(self):
@@ -102,27 +122,29 @@ class SimulationWindow(QMainWindow,Ui_MainWindow):
 
     def is_done(self,row,column):
         if self.target[0] == row and self.target[1] == column:
-            done = QMessageBox().about(self,"Simulación terminada","Simulación terminada con exito") 
-
+            done_box = QMessageBox().about(self,"Simulación terminada",f"{self.character.get_name()} - Simulación terminada con exito") 
+            self.done = True
+            
     def keyPressEvent(self, event: QKeyEvent):
-        print("posicion actual del personaje : ", self.character.get_last_position() )
-        row,column = self.character.get_last_position()
-        if event.key() == Qt.Key_Up:
-            if self.Map.return_up_down(row-1):
-                self.update_movement(row-1,column)
-                self.is_done(row-1,column)
-        if event.key() == Qt.Key_Down:
-            if self.Map.return_up_down(row+1):
-                self.update_movement(row+1,column)
-                self.is_done(row+1,column)
-        if event.key() == Qt.Key_Left:
-            if self.Map.return_left_right(column-1):
-                self.update_movement(row,column-1)
-                self.is_done(row,column-1)
-        if event.key() == Qt.Key_Right:
-            if self.Map.return_left_right(column+1):
-                self.update_movement(row,column+1)
-                self.is_done(row,column+1)
+        if not self.done:
+            print("posicion actual del personaje : ", self.character.get_last_position() )
+            row,column = self.character.get_last_position()
+            if event.key() == Qt.Key_Up:
+                if self.Map.return_up_down(row-1,column):
+                    self.update_movement(row-1,column)
+                    self.is_done(row-1,column)
+            if event.key() == Qt.Key_Down:
+                if self.Map.return_up_down(row+1,column):
+                    self.update_movement(row+1,column)
+                    self.is_done(row+1,column)
+            if event.key() == Qt.Key_Left:
+                if self.Map.return_left_right(row,column-1):
+                    self.update_movement(row,column-1)
+                    self.is_done(row,column-1)
+            if event.key() == Qt.Key_Right:
+                if self.Map.return_left_right(row,column+1):
+                    self.update_movement(row,column+1)
+                    self.is_done(row,column+1)
 
     def load_graph(self): 
         for i in range(len(self.graph)):

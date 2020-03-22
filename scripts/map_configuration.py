@@ -15,17 +15,45 @@ from lands.load import copy_image
 from models.map import Map
 
 class TemplateWindow(QMainWindow, Ui_TemplateWindow):
-    def __init__(self, file_direction="",  graph=[]): #Inicializa Mapa, este crea una matriz con nodos
+    def __init__(self, file_direction="",  graph=[], characters=[]): #Inicializa Mapa, este crea una matriz con nodos
         super(TemplateWindow, self).__init__()
         self.setupUi(self)
-        self.Map = Map(graph,file_direction,file_direction)
+        if type(graph) == list:
+            self.Map = Map(graph,file_direction,file_direction)
+        else:
+            self.Map = graph
         self.graph = self.Map.get_graph()
+        self.characters = characters
         self.landPaths = []
         self.load_coords()
-        self.load_graph()
+        if type(graph) == list:
+            self.load_graph()
+        else:
+            self.load_MAP()
+            self.nextBtn.setEnabled(True)
         self.load_lands()
         self.assign_widgets()
         self.show()
+
+    def load_MAP(self):
+        for i in range(len(self.graph)):
+            row = self.graph[i]
+            data = str(i + 1)
+            node_lbl = QLabel()
+            node_lbl.setAlignment(Qt.AlignCenter)
+            node_lbl.setFixedSize(40, 40)
+            node_lbl.setText(data)
+            self.mapGrd.addWidget(node_lbl, i, 0)
+            for j in range(len(row)):
+                node = row[j]
+                node_lbl = QLabel()
+                if node.get_image() != None:
+                    data = node.get_image()
+                    node_lbl.setPixmap(QPixmap(data))
+                    node_lbl.setFixedSize(40, 40)
+                    msg = f"Coordenadas : {node.get_name()}" + '\n' + f"Tipo : {node.get_category()}" + '\n' + f"Terreno : {node.get_land()}"
+                    node_lbl.setToolTip(msg)
+                    self.mapGrd.addWidget(node_lbl, i, j + 1)
 
     def assign_widgets(self):
         self.addLandBtn.clicked.connect(self.add_lands)
@@ -39,11 +67,18 @@ class TemplateWindow(QMainWindow, Ui_TemplateWindow):
         self.close()
 
     def allow_change(self):
-        from scripts.simulation import SimulationWindow
+        from scripts.character_edition import CharacterEditionWindow
+        self.Map.clear_available_lands()
+        self.Map.store_lands()
+        self.edition = CharacterEditionWindow(Map=self.Map,characters=self.characters,land_Paths=self.landPaths)
+        self.close()
+        """
         from scripts.simulation_configuration import SimulationConfiguration
         self.simulation = SimulationConfiguration(self.Map)
         self.close()
         """
+        """
+        from scripts.simulation import SimulationWindow
         self.Map.store_lands()
         print(self.Map.get_available_lands())
         self.simulation = SimulationWindow(self.Map)
@@ -95,20 +130,19 @@ class TemplateWindow(QMainWindow, Ui_TemplateWindow):
         self.landLbl.setText(land_name)
         
     def add_lands(self): #Agregar terrenos a la lista
-        self.landLst.clear()
+        #self.landLst.clear()
         if re.fullmatch(r"([a-zA-Z]|[0-9]|_)+",self.landTxt.toPlainText()):
-            file_name = QFileDialog.getOpenFileName(self,"Images (*.png *.xpm *.jpg)")
+            file_name = QFileDialog.getOpenFileName(self,"Images (*.png *.xpm *.jpg)", '.', 'PNG((*.png)')
             path =file_name[0]
             path = copy_image(path,self.landTxt.toPlainText())
-
             itm = QListWidgetItem(QIcon(path), self.landTxt.toPlainText())
             self.landLst.addItem(itm)
             print(path)
             self.landPaths.append(path)
             print(self.landPaths)
             self.landTxt.setPlainText("")
-            self.landLst.clear()
-        self.load_lands()
+            #self.landLst.clear()
+        #self.load_lands()
 
     def load_lands(self): #Cargar terrenos ubicados en /project/lands
         self.landLst.setViewMode(QListView.IconMode)
