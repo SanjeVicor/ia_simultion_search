@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'secundary_window-actual.ui'
+## Form generated from reading UI file 'secundary_window-pruebas.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.14.1
 ##
@@ -20,7 +20,7 @@ class Ui_TemplateWindow(object):
     def setupUi(self, TemplateWindow):
         if TemplateWindow.objectName():
             TemplateWindow.setObjectName(u"TemplateWindow")
-        TemplateWindow.resize(856, 804)
+        TemplateWindow.resize(506, 749)
         self.centralwidget = QWidget(TemplateWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)

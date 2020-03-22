@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1005</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="formLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>10</y>
+      <width>561</width>
+      <height>561</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="character_edit_lyt">
+     <item row="1" column="1">
+      <widget class="QPushButton" name="accept_btn">
+       <property name="text">
+        <string>ir a simulación</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QListWidget" name="images_lst"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="image_lbl">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="search_img_btn">
+       <property name="text">
+        <string>Buscar más</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">font: 75 20pt &quot;DejaVu Sans&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Costos</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="name_txt"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="go_back_btn">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>88</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(114, 159, 207);</string>
+    </property>
+    <property name="text">
+     <string>ir atras</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>go-back.png</normaloff>go-back.png</iconset>
+    </property>
+   </widget>
+   <widget class="QWidget" name="formLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>59</y>
+      <width>421</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="select_character_lyt"/>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
