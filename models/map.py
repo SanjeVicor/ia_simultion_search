@@ -52,6 +52,41 @@ class Map(object):
                     #print("Nodo : ", str(node.get_coord_x()),", ", str(node.get_coord_y()))
                     #print(str(e.get_coord_x()),", ", str(e.get_coord_y()))
 
+    def generate_costs(self,land,c):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                node = self.matrix[i][j]
+                if node.get_land() == land:
+                    node.set_weight(c)
+
+    def get_cost_of_land(self,land):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                node = self.matrix[i][j]
+                if node.get_land() == land:
+                    return node.get_weight()
+    
+    def get_cost_coord(self,row,column):
+        return self.matrix[row][column].get_weight()
+
+    def print_matrix(self):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                node = self.matrix[i][j]
+                print(node.get_land())
+                print(node.get_weight())
+                print(i)
+                print(j)
+                print("---------")
+
+    def is_complete_configuration(self):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                node = self.matrix[i][j]
+                if node.get_weight() == "":
+                    return False
+        return True
+
     def get_graph(self):
         return self.matrix
 
@@ -74,7 +109,10 @@ class Map(object):
 
     def get_available_lands(self):
         return self.available_lands
-
+    
+    def clear_available_lands(self):
+        self.available_lands.clear()
+        
     def set_land_node(self,coords,land, path):
         #self.matrix[coords[0]][coords[1]].
         self.matrix[coords[0]][coords[1]].set_land(land)
@@ -93,16 +131,22 @@ class Map(object):
     def set_goal(self,row,column):
         self.matrix[row][column].set_target()
 
+    def clear_visits(self):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                node = self.matrix[i][j]
+                node.clear_visits()
+
     """
     KEYBOARD MOVEMENTS
     """
-    def return_up_down(self,row):
-        if row == -1 or row >= len(self.matrix):
-            return False
+    def return_up_down(self,row,column):
+        if row == -1 or row >= len(self.matrix) or self.matrix[row][column].get_weight() == None:
+            return False 
         return True
         
-    def return_left_right(self,column):
-        if column == -1 or column >= len(self.matrix[0]):
+    def return_left_right(self,row,column):
+        if column == -1 or column >= len(self.matrix[0]) or self.matrix[row][column].get_weight() == None:
             return False
         return True
     

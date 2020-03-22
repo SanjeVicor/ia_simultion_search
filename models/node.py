@@ -4,7 +4,7 @@ class Node(object):
         self.y = y
         self.neighbors = []
         self.name = "(" + str(self.x) + "," + str(self.y) + ")"
-        self.weight = 1
+        self.weight = ""
         self.category = category #int
         self.land = None #string
         self.image = None
@@ -16,6 +16,9 @@ class Node(object):
     
     def is_target(self):
         return self.target
+
+    def clear_visits(self):
+        self.visits.clear()
 
     def add_visits(self,v):
         self.visits.append(v)
