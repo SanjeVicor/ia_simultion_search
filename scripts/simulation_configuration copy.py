@@ -15,12 +15,11 @@ from models.goal import Goal
 
 from views.simulations import Ui_Dialog
 from views.priority import Ui_Dialog as Priority_Dialog
-from views.distances import Ui_Dialog as Distances_Dialog
 
 from extra_images.load import get_down_key,get_left_key,get_right_key,get_up_key
 
 class SimulationConfiguration(QMainWindow, Ui_MainWindow):
-    def __init__(self,character,goal=None):
+    def __init__(self,character):
         super(SimulationConfiguration, self).__init__()
         self.setupUi(self)
         
@@ -28,45 +27,28 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         self.Map = self.character.get_map()
         self.graph = self.Map.get_graph()
 
-        self.distance = None
         self.load_coords()
-        self.load_map() 
+        self.load_map()
+ 
         self.character.set_label_idx(None)
         self.load_character_lbl()
         self.load_character_errors()
-        self.load_character_indications()
         self.load_character_textline()
-
-        from_simulation = False
-        r = 0
-        c = 0
-        if goal == None:
-            self.goal = Goal(lbl_idx=None)
-        else:
-            self.goal = goal
-            r,c = self.goal.get_last_position()
-            from_simulation = True
-
+ 
+        self.goal = Goal(lbl_idx=None)
+         
         self.load_goal_lbl()
         self.load_goal_errors()
-        self.load_goal_indications()
         self.load_goal_textline() 
 
         self.adjust_sizes(None,None)
 
         self.load_accept_btn()
 
-        if from_simulation:
-            self.load_goal(r,c+1)
-            r,c = self.character.get_last_position()
-            self.load_character(r,c+1)
-            
 
         self.priority_list = list()
-        self.simulation_option = None  
-        self.setStyleSheet("font-family:Verdana;")
+        self.simulation_option = None 
         self.show()
-
 
 #-------
 #Map
@@ -111,16 +93,15 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
 #----------
 
     def valid_coord(self,coords):
-        coord_reg_ex = r"(\s*[a-zA-Z]+\s*\x2c\s*[1-9][0-9]*\s*)"
+        coord_reg_ex = r"(\s*[1-9][0-9]*\s*\x2c\s*[a-zA-Z]+\s*)"
         if re.fullmatch(coord_reg_ex,coords):
             coords = coords.replace(" ","")
             coords = coords.replace('\n',"")
             coords = coords.replace('\r',"") 
-            coords = coords.split(',') 
-            coords[0] = ord(coords[0].upper()) - 64
-            coords[1] = int(coords[1]) - 1 
-            if self.valid_ranges(coords[1], coords[0]):
-                coords = [coords[1], coords[0]]
+            coords = coords.split(',')
+            coords[1] = ord(coords[1].upper()) - 64
+            coords[0] = int(coords[0]) - 1 
+            if self.valid_ranges(coords[0], coords[1]):
                 return True, coords
         return False, None
 
@@ -156,7 +137,7 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         self.goalTxt = QLineEdit()
         self.goalTxt.setEnabled(True)
         self.goalTxt.setMaximumSize(QSize(370, 30))
-        self.goalTxt.setPlaceholderText("Columna , Fila. Ej: A , 1")
+        self.goalTxt.setPlaceholderText("Fila , Columna")
         self.contentVLayout.addWidget(self.goalTxt)
 
         self.goalTxt.textChanged.connect(self.goal_changed_textLine)
@@ -183,39 +164,23 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
                 self.load_goal(coords[0], coords[1])
             else:
                 self.error_goal_invalid_coord_lbl.setVisible(True)
-                if self.goal.get_label_idx() != None:
-                    self.delete_position_goal()
         else:
             self.error_goal_exist_coord_lbl.setVisible(True)
-            if self.goal.get_label_idx() != None:
-                self.delete_position_goal()
-
-    def load_goal_indications(self):
-        self.indications_goal_lbl = QLabel("Ingresa Coordenadas(Columna, Fila) Ejemplo : A , 1")
-        self.indications_goal_lbl.setVisible(True)
-        self.contentVLayout.addWidget(self.indications_goal_lbl)
 
     def load_goal(self,x,y):
         old_lbl = self.mapGrd.itemAtPosition(x,y)
         old_lbl = old_lbl.widget()
         self.mapGrd.addWidget(self.goal.create_lbl(),x,y) 
         self.goal.set_last_position(x,y-1)
-        self.goal.set_label_idx(self.mapGrd.count()-1) 
+        self.goal.set_label_idx(self.mapGrd.count()-1)
+        
         self.enable_change_btn()
 
     def delete_position_goal(self):
-        self.goal.set_last_position(None,None)
-        chIdx = self.character.get_label_idx()
-        gIdx = self.goal.get_label_idx()
-        if chIdx != None and gIdx != None:
-            if gIdx < chIdx:
-                self.character.set_label_idx(chIdx-1)
         old_lbl = self.mapGrd.itemAt(self.goal.get_label_idx())
         old_lbl = self.mapGrd.indexOf(old_lbl)
         old_lbl = self.mapGrd.takeAt(old_lbl) 
         old_lbl.widget().deleteLater()
-        self.goal.set_label_idx(None)
-        self.accept_btn.setEnabled(False)
 
 #----------
 #Character
@@ -231,7 +196,7 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         self.characterTxt = QLineEdit()
         self.characterTxt.setEnabled(True)
         self.characterTxt.setMaximumSize(QSize(370, 30))
-        self.characterTxt.setPlaceholderText("Columna , Fila. Ej: A , 1")
+        self.characterTxt.setPlaceholderText("Fila , Columna")
         self.contentVLayout.addWidget(self.characterTxt)
 
         self.characterTxt.textChanged.connect(self.character_changed_textLine)
@@ -248,6 +213,7 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
     def character_changed_textLine(self):
         coords = self.characterTxt.text() 
         ok, coords = self.valid_coord(coords)
+        
         if ok:
             self.error_exist_coord_lbl.setVisible(False)
             self.error_invalid_coord_lbl.setVisible(False)
@@ -258,17 +224,8 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
                 self.load_character(coords[0], coords[1])
             else:
                 self.error_invalid_coord_lbl.setVisible(True)
-                if self.character.get_label_idx() != None:
-                    self.delete_position_character()
         else:
             self.error_exist_coord_lbl.setVisible(True)
-            if self.character.get_label_idx() != None:
-                self.delete_position_character()
-    
-    def load_character_indications(self):
-        self.indications_character_lbl = QLabel("Ingresa Coordenadas(Columna, Fila) Ejemplo : A , 1")
-        self.indications_character_lbl.setVisible(True)
-        self.contentVLayout.addWidget(self.indications_character_lbl)
 
     def load_character(self,x,y):
         old_lbl = self.mapGrd.itemAtPosition(x,y)
@@ -279,28 +236,17 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         self.enable_change_btn()
 
     def delete_position_character(self):
-        self.character.set_last_position(None,None)
-        chIdx = self.character.get_label_idx()
-        gIdx = self.goal.get_label_idx()
-        if gIdx != None and chIdx != None:
-            if chIdx < gIdx:
-                self.goal.set_label_idx(gIdx-1)
         old_lbl = self.mapGrd.itemAt(self.character.get_label_idx())
         old_lbl = self.mapGrd.indexOf(old_lbl)
         old_lbl = self.mapGrd.takeAt(old_lbl) 
         old_lbl.widget().deleteLater()
-        self.character.set_label_idx(None)
-        self.accept_btn.setEnabled(False)
 
 #--------
 # Accept Button
 #------- 
     def load_accept_btn(self):
-        PrimaryBtnStyleEnabled = "QPushButton:enabled{background-color:#4e73df;border-radius:6px;color:#ffffff;font-family:Verdana;text-decoration:none;}" 
-        btnStyleDisabled = " QPushButton:disabled{background-color:#949494;border-radius:6px;font-family:Verdana;text-decoration:none; }"
         self.accept_btn = QPushButton("Aceptar")
         self.accept_btn.setEnabled(False)
-        self.accept_btn.setStyleSheet(btnStyleDisabled + PrimaryBtnStyleEnabled)
         #self.accept_btn.setEnabled(True)
         self.accept_btn.clicked.connect(self.allow_change)
         self.contentVLayout.addWidget(self.accept_btn)
@@ -326,17 +272,11 @@ class SimulationConfiguration(QMainWindow, Ui_MainWindow):
         from scripts.simulation import SimulationWindow
         g_pos1, g_pos2 = self.goal.get_last_position()
         self.Map.set_goal(g_pos1, g_pos2)
-        self.simulation = SimulationWindow(self.Map,self.character,self.goal,self.simulation_option, self.priority_list,self.distance)
+        self.simulation = SimulationWindow(self.Map,self.character,self.goal,self.simulation_option, self.priority_list)
         
+
     def priority_selection(self,sm):
         self.simulation_option = sm
-        if sm >= 5:
-            self.distances_options = DistancesDialog(self)
-        else:
-            self.priority_options = PriorityDialog(self)
-    
-    def set_distance(self,d):
-        self.distance = d
         self.priority_options = PriorityDialog(self)
 
 class OptionsDialog(QDialog,Ui_Dialog):
@@ -344,31 +284,14 @@ class OptionsDialog(QDialog,Ui_Dialog):
         super(OptionsDialog,self).__init__() 
         self.setupUi(self)
         self.assign_widgets()
-        self.assign_styles()
         self.mw = MainWindow
         self.show()
 
-    def assign_styles(self):
-        PrimaryBtnStyleEnabled = "QPushButton:enabled{background-color:#4e73df;border-radius:6px;color:#ffffff;font-family:Verdana;text-decoration:none;}" 
-        clickEffect = "QPushButton:pressed{border-style:solid;border-width:1px;}"
-        stl = PrimaryBtnStyleEnabled + clickEffect
-
-        self.manualBtn.setStyleSheet(stl)  
-        self.depthBtn.setStyleSheet(stl)
-        self.breathBtn.setStyleSheet(stl)
-        self.backtrackingBtn.setStyleSheet(stl)
-        self.UCSBtn.setStyleSheet(stl)
-        self.greedyBtn.setStyleSheet(stl)
-        self.AStarBtn.setStyleSheet(stl)
-    
     def assign_widgets(self): 
         self.manualBtn.clicked.connect(self.manual_simulation)
         self.depthBtn.clicked.connect(partial(self.priority_selection,1))
         self.breathBtn.clicked.connect(partial(self.priority_selection,2))
         self.backtrackingBtn.clicked.connect(partial(self.priority_selection,3))
-        self.UCSBtn.clicked.connect(partial(self.priority_selection,4))
-        self.greedyBtn.clicked.connect(partial(self.priority_selection,5))
-        self.AStarBtn.clicked.connect(partial(self.priority_selection,6))
 
     def manual_simulation(self):
         self.close()
@@ -378,30 +301,6 @@ class OptionsDialog(QDialog,Ui_Dialog):
         self.close()
         self.mw.priority_selection(sm)
 
-class DistancesDialog(QDialog,Distances_Dialog):
-    def __init__(self,MainWindow):
-        super(DistancesDialog,self).__init__() 
-        self.setupUi(self)
-        self.assign_widgets()
-        self.assign_styles()
-        self.mw = MainWindow
-        self.show()
-
-    def assign_styles(self):
-        PrimaryBtnStyleEnabled = "QPushButton:enabled{background-color:#4e73df;border-radius:6px;color:#ffffff;font-family:Verdana;text-decoration:none;}" 
-        clickEffect = "QPushButton:pressed{border-style:solid;border-width:1px;}"
-        stl = PrimaryBtnStyleEnabled + clickEffect
-        self.EuBtn.setStyleSheet(stl)
-        self.ManBtn.setStyleSheet(stl)
-    
-    def assign_widgets(self): 
-        self.EuBtn.clicked.connect(partial(self.distance_selection,0))
-        self.ManBtn.clicked.connect(partial(self.distance_selection,1))
-    
-    def distance_selection(self,d): 
-        self.close()
-        self.mw.set_distance(d)
-
 class PriorityDialog(QDialog,Priority_Dialog):
     def __init__(self,MainWindow):
         super(PriorityDialog, self).__init__()
@@ -409,16 +308,8 @@ class PriorityDialog(QDialog,Priority_Dialog):
         self.mw = MainWindow
         self.load_images()
         self.vr = [] 
-        self.assign_styles()
-        self.pushButton.clicked.connect(self.assign_simulation)
         self.show()
     
-    def assign_styles(self):
-        PrimaryBtnStyleEnabled = "QPushButton:enabled{background-color:#4e73df;border-radius:6px;color:#ffffff;font-family:Verdana;text-decoration:none;}" 
-        clickEffect = "QPushButton:pressed{border-style:solid;border-width:1px;}"
-        stl = PrimaryBtnStyleEnabled + clickEffect
-        self.pushButton.setStyleSheet(stl) 
-
     def assign_simulation(self):
         self.close()
         self.mw.set_priority_list(self.vr) 
@@ -453,6 +344,7 @@ class PriorityDialog(QDialog,Priority_Dialog):
         if not (self.firstPriorityLbl.get_priority() and self.secondPriorityLbl.get_priority() and self.thirdPriorityLbl.get_priority() and self.fourthPriorityLbl.get_priority()) == None:
             if len(set(self.vr)) == len(self.vr): 
                 self.pushButton.setEnabled(True)
+                self.pushButton.clicked.connect(self.assign_simulation)
             else:
                 self.pushButton.setDisabled(True)
 
