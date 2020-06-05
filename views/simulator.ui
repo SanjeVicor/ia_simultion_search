@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1058</width>
-    <height>481</height>
+    <width>443</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+    <item row="2" column="0">
      <widget class="QLabel" name="rewardLbl">
       <property name="maximumSize">
        <size>
@@ -28,11 +28,43 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <layout class="QGridLayout" name="mapGrd">
-      <property name="spacing">
-       <number>1</number>
+    <item row="5" column="0">
+     <widget class="QPushButton" name="restart_btn">
+      <property name="text">
+       <string>Reiniciar</string>
       </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <layout class="QHBoxLayout" name="ColumnLyt">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="RowLyt">
+          <property name="spacing">
+           <number>1</number>
+          </property>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="mapGrd">
+          <property name="spacing">
+           <number>1</number>
+          </property>
+         </layout>
+        </item>
+       </layout>
+      </item>
      </layout>
     </item>
    </layout>

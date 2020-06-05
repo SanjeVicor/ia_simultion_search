@@ -20,7 +20,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1058, 481)
+        MainWindow.resize(492, 376)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_2 = QGridLayout(self.centralwidget)
@@ -29,13 +29,41 @@ class Ui_MainWindow(object):
         self.rewardLbl.setObjectName(u"rewardLbl")
         self.rewardLbl.setMaximumSize(QSize(16777215, 15))
 
-        self.gridLayout_2.addWidget(self.rewardLbl, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.rewardLbl, 2, 0, 1, 1)
+
+        self.restart_btn = QPushButton(self.centralwidget)
+        self.restart_btn.setObjectName(u"restart_btn")
+
+        self.gridLayout_2.addWidget(self.restart_btn, 5, 0, 1, 1)
+
+        self.verticalLayout_5 = QVBoxLayout()
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.ColumnLyt = QHBoxLayout()
+        self.ColumnLyt.setSpacing(1)
+        self.ColumnLyt.setObjectName(u"ColumnLyt")
+
+        self.verticalLayout_5.addLayout(self.ColumnLyt)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setSpacing(1)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.RowLyt = QVBoxLayout()
+        self.RowLyt.setSpacing(1)
+        self.RowLyt.setObjectName(u"RowLyt")
+
+        self.horizontalLayout_2.addLayout(self.RowLyt)
 
         self.mapGrd = QGridLayout()
         self.mapGrd.setSpacing(1)
         self.mapGrd.setObjectName(u"mapGrd")
 
-        self.gridLayout_2.addLayout(self.mapGrd, 1, 0, 1, 1)
+        self.horizontalLayout_2.addLayout(self.mapGrd)
+
+
+        self.verticalLayout_5.addLayout(self.horizontalLayout_2)
+
+
+        self.gridLayout_2.addLayout(self.verticalLayout_5, 4, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -50,5 +78,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.rewardLbl.setText(QCoreApplication.translate("MainWindow", u"Costo Actual :", None))
+        self.restart_btn.setText(QCoreApplication.translate("MainWindow", u"Reiniciar", None))
     # retranslateUi
 

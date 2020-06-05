@@ -41,16 +41,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addLayout(self.XGrd, 0, 1, 1, 1)
 
-        self.go_back = QPushButton(self.centralwidget)
-        self.go_back.setObjectName(u"go_back")
-        self.go_back.setMaximumSize(QSize(74, 16777215))
-        self.go_back.setStyleSheet(u"background-color: rgb(52, 101, 164);")
-        icon = QIcon()
-        icon.addFile(u"go-back.png", QSize(), QIcon.Normal, QIcon.Off)
-        self.go_back.setIcon(icon)
-
-        self.gridLayout_2.addWidget(self.go_back, 0, 0, 1, 1)
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -63,6 +53,5 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.go_back.setText(QCoreApplication.translate("MainWindow", u"ir atras", None))
     # retranslateUi
 

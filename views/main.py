@@ -20,31 +20,36 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(603, 125)
-        MainWindow.setStyleSheet(u"background-color: rgb(136, 138, 133);")
+        MainWindow.resize(938, 648)
+        self.actionSearch = QAction(MainWindow)
+        self.actionSearch.setObjectName(u"actionSearch")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.loadFileBtn = QPushButton(self.centralwidget)
-        self.loadFileBtn.setObjectName(u"loadFileBtn")
-        self.loadFileBtn.setGeometry(QRect(10, 50, 88, 27))
-        self.loadFileBtn.setStyleSheet(u"color: rgb(238, 238, 236);\n"
-"background-color: rgba(0, 0, 0, 0);\n"
-"border-color: rgba(191, 64, 64, 0);")
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(10, 10, 81, 19))
-        self.fileDirectionLbl = QLabel(self.centralwidget)
-        self.fileDirectionLbl.setObjectName(u"fileDirectionLbl")
-        self.fileDirectionLbl.setGeometry(QRect(90, 10, 491, 19))
-        self.loadBtn = QPushButton(self.centralwidget)
-        self.loadBtn.setObjectName(u"loadBtn")
-        self.loadBtn.setEnabled(False)
-        self.loadBtn.setGeometry(QRect(260, 70, 88, 27))
-        self.loadBtn.setStyleSheet(u"background-color: rgb(52, 101, 164);")
+        self.gridLayout = QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
+
+        self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
+
+        self.mapGrd = QGridLayout()
+        self.mapGrd.setObjectName(u"mapGrd")
+
+        self.gridLayout.addLayout(self.mapGrd, 0, 2, 1, 1)
+
         MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 938, 24))
+        self.menuCargar_nuevo_mapa = QMenu(self.menubar)
+        self.menuCargar_nuevo_mapa.setObjectName(u"menuCargar_nuevo_mapa")
+        MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.menuCargar_nuevo_mapa.menuAction())
+        self.menuCargar_nuevo_mapa.addAction(self.actionSearch)
 
         self.retranslateUi(MainWindow)
 
@@ -53,9 +58,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.loadFileBtn.setText(QCoreApplication.translate("MainWindow", u"Cargar Mapa", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Direcci\u00f3n :", None))
-        self.fileDirectionLbl.setText("")
-        self.loadBtn.setText(QCoreApplication.translate("MainWindow", u"Aceptar", None))
+        self.actionSearch.setText(QCoreApplication.translate("MainWindow", u"Nuevo mapa", None))
+        self.menuCargar_nuevo_mapa.setTitle(QCoreApplication.translate("MainWindow", u"Cargar", None))
     # retranslateUi
 

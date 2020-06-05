@@ -6,82 +6,46 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
-    <height>125</height>
+    <width>938</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: rgb(136, 138, 133);</string>
-  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="loadFileBtn">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>88</width>
-      <height>27</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout"/>
+    </item>
+    <item row="0" column="2">
+     <layout class="QGridLayout" name="mapGrd"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>938</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuCargar_nuevo_mapa">
+    <property name="title">
+     <string>Cargar</string>
     </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(238, 238, 236);
-background-color: rgba(0, 0, 0, 0);
-border-color: rgba(191, 64, 64, 0);</string>
-    </property>
-    <property name="text">
-     <string>Cargar Mapa</string>
-    </property>
+    <addaction name="actionSearch"/>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>81</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Dirección :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="fileDirectionLbl">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>10</y>
-      <width>491</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="loadBtn">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>70</y>
-      <width>88</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(52, 101, 164);</string>
-    </property>
-    <property name="text">
-     <string>Aceptar</string>
-    </property>
-   </widget>
+   <addaction name="menuCargar_nuevo_mapa"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSearch">
+   <property name="text">
+    <string>Nuevo mapa</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
