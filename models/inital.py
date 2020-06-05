@@ -3,11 +3,11 @@ from PySide2.QtWidgets import QLabel
 from PySide2.QtGui import QPixmap
 from PySide2.QtWidgets import QSizePolicy
 
-from extra_images.load import get_final_image
+from extra_images.load import get_initial_image
 
-class Goal(object):
+class Initial_point(object):
     def __init__(self,lbl_idx=None):
-        self.path = get_final_image()
+        self.path = get_initial_image()
         self.label_index = lbl_idx
         self.row = None
         self.column = None
