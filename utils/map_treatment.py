@@ -1,9 +1,12 @@
  
 def get_matrix(data_list):
     matrix = list()
-    for e in data_list:
+    for idx,e in enumerate(data_list):
         row = e.split(",")
-        for i in range(len(row)):
+        for i in range(len(row)): 
+            row[i] = row[i].replace(" ","")
+            if not row[i].isdigit():
+                return False, f"Error, se encontro un caracter no permitido: {row[i]}, checa la linea {idx + 1}, en la columna {i+1}"
             try:
                 row[i] = int(row[i])
                 if row[i] < 0:
@@ -28,7 +31,6 @@ def read_file(path):
         return None, "Archivo Vacio"
     matrix, exception = get_matrix(data)
     if not matrix :
-        print(exception)
         return None , exception
 
     if len(matrix) > 15:
@@ -39,8 +41,7 @@ def read_file(path):
 
     ok , exception = is_matrix_ok(matrix)
     if ok:
-        print(matrix)
+        #print(matrix)
         return matrix, None
     else:
-        print(exception)
         return None , exception
